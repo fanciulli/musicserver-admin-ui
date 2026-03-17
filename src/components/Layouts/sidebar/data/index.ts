@@ -10,6 +10,20 @@ export const NAV_DATA = [
         icon: Icons.Table,
         items: [],
       },
+      {
+        title: "Logs",
+        icon: Icons.Table,
+        items: [
+          {
+            title: "Main",
+            url: "/logs/main",
+          },
+          {
+            title: "Fastify",
+            url: "/logs/fastify",
+          },
+        ],
+      },
     ],
   },
 ];

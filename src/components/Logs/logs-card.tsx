@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 type LogsCardProps = {
+  title?: string;
   logKey: "main" | "fastify";
 };
 
@@ -108,13 +109,37 @@ function formatLogLevel(value: unknown): string {
   return toCellValue(value);
 }
 
+const COLUMN_LABEL_OVERRIDES: Record<string, string> = {
+  "res.statusCode": "Status Code",
+};
+
 function formatColumnLabel(column: string): string {
+  if (column in COLUMN_LABEL_OVERRIDES) {
+    return COLUMN_LABEL_OVERRIDES[column];
+  }
+
   const withoutPrefixes = column.replace(/^req\./, "").replace(/^res\./, "");
   if (!withoutPrefixes) {
     return "";
   }
 
   return withoutPrefixes.charAt(0).toUpperCase() + withoutPrefixes.slice(1);
+}
+
+function decodeUrl(raw: string): string {
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    // Fallback: decode each run of consecutive valid %XX sequences individually
+    // to handle URLs that mix encoded and non-encoded (or malformed) segments.
+    return raw.replace(/(%[0-9A-Fa-f]{2})+/g, (sequence) => {
+      try {
+        return decodeURIComponent(sequence);
+      } catch {
+        return sequence;
+      }
+    });
+  }
 }
 
 function getFieldValue(
@@ -138,6 +163,10 @@ function getFieldValue(
 
   if (fieldPath === "level") {
     return formatLogLevel(current);
+  }
+
+  if (fieldPath === "req.url") {
+    return decodeUrl(toCellValue(current));
   }
 
   return toCellValue(current);
@@ -209,7 +238,7 @@ function toErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : "Failed to load logs";
 }
 
-export function LogsCard({ logKey }: LogsCardProps) {
+export function LogsCard({ title, logKey }: LogsCardProps) {
   const [logsText, setLogsText] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -277,7 +306,12 @@ export function LogsCard({ logKey }: LogsCardProps) {
 
   return (
     <section className="rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card sm:p-7.5">
-      <div className="mb-5 flex items-center justify-end gap-3">
+      <div className="mb-5 flex items-center justify-between gap-3">
+        {title && (
+          <h2 className="text-xl font-semibold text-dark dark:text-white">
+            {title}
+          </h2>
+        )}
         <button
           className="inline-flex items-center rounded-lg border border-stroke px-3 py-2 text-sm font-medium text-dark transition hover:bg-gray-100 dark:border-dark-3 dark:text-white dark:hover:bg-dark-2"
           onClick={() => {
@@ -294,21 +328,23 @@ export function LogsCard({ logKey }: LogsCardProps) {
         </div>
       )}
 
-      <div className="max-h-[65vh] overflow-auto rounded-lg border border-stroke bg-[#F7F9FC] p-4 dark:border-dark-3 dark:bg-dark-2">
+      <div className="max-h-[65vh] overflow-auto rounded-lg border border-stroke bg-[#F7F9FC] dark:border-dark-3 dark:bg-dark-2">
         {placeholder ? (
-          <p className="text-sm text-dark-4 dark:text-dark-6">{placeholder}</p>
+          <p className="p-4 text-sm text-dark-4 dark:text-dark-6">
+            {placeholder}
+          </p>
         ) : emptyParsedData ? (
-          <p className="text-sm text-dark-4 dark:text-dark-6">
+          <p className="p-4 text-sm text-dark-4 dark:text-dark-6">
             No valid JSON log lines found.
           </p>
         ) : (
           <table className="min-w-full table-auto border-separate border-spacing-0 text-left text-sm text-dark dark:text-white">
-            <thead>
+            <thead className="sticky top-0 z-10">
               <tr>
                 {columns.map((column) => (
                   <th
                     key={column}
-                    className="sticky top-0 border-b border-stroke bg-[#F7F9FC] px-3 py-2 font-semibold dark:border-dark-3 dark:bg-dark-2"
+                    className="border-b border-stroke bg-[#F7F9FC] px-3 py-2 font-semibold dark:border-dark-3 dark:bg-dark-2"
                   >
                     {formatColumnLabel(column)}
                   </th>
@@ -319,14 +355,24 @@ export function LogsCard({ logKey }: LogsCardProps) {
             <tbody>
               {rows.map((row, rowIndex) => (
                 <tr key={`${rowIndex}-${row.time}-${row.reqId ?? ""}`}>
-                  {columns.map((column) => (
-                    <td
-                      key={`${rowIndex}-${column}`}
-                      className="border-b border-stroke px-3 py-2 align-top font-mono dark:border-dark-3"
-                    >
-                      {row[column]}
-                    </td>
-                  ))}
+                  {columns.map((column) => {
+                    const value = row[column] ?? "";
+                    const isTruncated =
+                      column === "req.url" && value.length > 50;
+                    const displayValue = isTruncated
+                      ? `${value.slice(0, 50)}…`
+                      : value;
+
+                    return (
+                      <td
+                        key={`${rowIndex}-${column}`}
+                        className="border-b border-stroke px-3 py-2 align-top font-mono dark:border-dark-3"
+                        title={isTruncated ? value : undefined}
+                      >
+                        {displayValue}
+                      </td>
+                    );
+                  })}
                 </tr>
               ))}
             </tbody>

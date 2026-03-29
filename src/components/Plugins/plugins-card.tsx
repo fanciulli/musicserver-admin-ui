@@ -109,6 +109,14 @@ function formatVariableLabel(variableName: string): string {
     .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2");
 }
 
+function formatCategoryLabel(category: string): string {
+  if (category === "music_sources") {
+    return "Music Source";
+  }
+
+  return category;
+}
+
 export function PluginsCard() {
   const [plugins, setPlugins] = useState<PluginItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -396,14 +404,11 @@ export function PluginsCard() {
                 >
                   <TableCell>
                     <p className="text-dark dark:text-white">{plugin.name}</p>
-                    <p className="mt-1 text-xs text-dark-4 dark:text-dark-6">
-                      {plugin.id}
-                    </p>
                   </TableCell>
 
                   <TableCell>
                     <p className="text-dark dark:text-white">
-                      {plugin.category}
+                      {formatCategoryLabel(plugin.category)}
                     </p>
                   </TableCell>
 

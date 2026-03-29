@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.text();
-    const response = await fetch(buildMusicServerUrl("/scan"), {
+    const response = await fetch(buildMusicServerUrl("/admin/scan"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

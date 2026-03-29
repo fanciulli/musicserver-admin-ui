@@ -1,13 +1,17 @@
 import { buildMusicServerUrl } from "@/lib/musicserver-api";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function POST(request: NextRequest) {
   try {
-    const response = await fetch(buildMusicServerUrl("/admin/plugins"), {
-      cache: "no-store",
+    const body = await request.text();
+    const response = await fetch(buildMusicServerUrl("/music/scan"), {
+      method: "POST",
       headers: {
+        "Content-Type": "application/json",
         Accept: "application/json",
       },
+      body,
+      cache: "no-store",
     });
 
     const text = await response.text();
@@ -25,7 +29,7 @@ export async function GET() {
         error:
           error instanceof Error
             ? error.message
-            : "Failed to call musicserver /plugins",
+            : "Failed to call musicserver /scan",
       },
       { status: 500 },
     );

@@ -67,7 +67,7 @@ export function PluginsCard() {
     setError(null);
 
     try {
-      const response = await fetch("/api/plugins", { cache: "no-store" });
+      const response = await fetch("/api/admin/plugins", { cache: "no-store" });
       if (!response.ok) {
         throw new Error(`Failed to load plugins (${response.status})`);
       }
@@ -109,10 +109,10 @@ export function PluginsCard() {
       try {
         const endpoint =
           action === "start"
-            ? "/api/plugins/start"
+            ? "/api/admin/plugins/start"
             : action === "stop"
-              ? "/api/plugins/stop"
-              : "/api/scan";
+              ? "/api/admin/plugins/stop"
+              : "/api/admin/scan";
 
         const payload =
           action === "scan" ? { id: plugin.id } : { pluginId: plugin.id };

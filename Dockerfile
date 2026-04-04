@@ -2,7 +2,7 @@ FROM node:25-alpine AS deps
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+RUN npm install --omit=dev
 
 FROM node:25-alpine AS builder
 WORKDIR /app

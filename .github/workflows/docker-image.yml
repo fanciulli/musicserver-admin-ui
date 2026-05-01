@@ -17,30 +17,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.ref_name }}
           fetch-depth: 0
 
-      - name: Compute image name and tag
+      - name: Resolve Docker tag
         id: vars
         shell: bash
         run: |
           set -euo pipefail
+          firstTag="$(git tag --points-at "${{ github.ref_name }}" | head -n 1)"
 
-          REPO_LC="$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
-          IMAGE_NAME="ghcr.io/${REPO_LC}"
-
-          FIRST_TAG="$(git tag --points-at "${GITHUB_SHA}" | head -n1 || true)"
-
-          if [ -n "${FIRST_TAG}" ]; then
-            IMAGE_TAG="${FIRST_TAG}"
-            echo "Using git tag from commit: ${IMAGE_TAG}"
+          if [[ -n "$firstTag" ]]; then
+            dockerTag="$firstTag"
           else
-            REF_SAFE="$(echo "${GITHUB_REF_NAME}" | tr '[:upper:]' '[:lower:]' | sed 's|/|-|g')"
-            IMAGE_TAG="latest"
-            echo "No tag on commit, using branch name: ${IMAGE_TAG}"
+            dockerTag="latest"
           fi
 
-          echo "image_name=${IMAGE_NAME}" >> "$GITHUB_OUTPUT"
-          echo "image_tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+          repoLower="${GITHUB_REPOSITORY,,}"
+          image="ghcr.io/${repoLower}"
+
+          echo "docker_tag=${dockerTag}" >> "$GITHUB_OUTPUT"
+          echo "image=${image}" >> "$GITHUB_OUTPUT"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -62,4 +59,4 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.vars.outputs.image_name }}:${{ steps.vars.outputs.image_tag }}
+          tags: ${{ steps.vars.outputs.image }}:${{ steps.vars.outputs.docker_tag }}

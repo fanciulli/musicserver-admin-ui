@@ -1,9 +1,6 @@
 name: Build Docker Image
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
@@ -38,7 +35,7 @@ jobs:
             echo "Using git tag from commit: ${IMAGE_TAG}"
           else
             REF_SAFE="$(echo "${GITHUB_REF_NAME}" | tr '[:upper:]' '[:lower:]' | sed 's|/|-|g')"
-            IMAGE_TAG="${REF_SAFE}"
+            IMAGE_TAG="latest"
             echo "No tag on commit, using branch name: ${IMAGE_TAG}"
           fi
 

@@ -5,6 +5,12 @@ export const NAV_DATA = [
     label: "MAIN MENU",
     items: [
       {
+        title: "Database",
+        url: "/database",
+        icon: Icons.FourCircle,
+        items: [],
+      },
+      {
         title: "Plugins",
         url: "/plugins",
         icon: Icons.Table,

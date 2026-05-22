@@ -17,6 +17,12 @@ export const NAV_DATA = [
         items: [],
       },
       {
+        title: "API Keys",
+        url: "/pages/api-keys",
+        icon: Icons.Table,
+        items: [],
+      },
+      {
         title: "Logs",
         icon: Icons.Table,
         items: [

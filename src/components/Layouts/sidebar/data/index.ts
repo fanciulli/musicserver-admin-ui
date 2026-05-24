@@ -18,17 +18,9 @@ export const NAV_DATA = [
       },
       {
         title: "Logs",
+        url: "/logs/main",
         icon: Icons.Table,
-        items: [
-          {
-            title: "Main",
-            url: "/logs/main",
-          },
-          {
-            title: "Fastify",
-            url: "/logs/fastify",
-          },
-        ],
+        items: [],
       },
     ],
   },

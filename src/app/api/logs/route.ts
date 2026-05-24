@@ -4,12 +4,30 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id")?.trim().toLowerCase();
     const query = new URLSearchParams();
 
+    const id = searchParams.get("id")?.trim().toLowerCase();
     if (id === "main" || id === "fastify") {
       query.set("id", id);
     }
+
+    const level = searchParams.get("level")?.trim().toLowerCase();
+    const validLevels = ["trace", "debug", "info", "warn", "error", "fatal"];
+    if (level && validLevels.includes(level)) {
+      query.set("level", level);
+    }
+
+    const from = searchParams.get("from")?.trim();
+    if (from) query.set("from", from);
+
+    const to = searchParams.get("to")?.trim();
+    if (to) query.set("to", to);
+
+    const page = searchParams.get("page")?.trim();
+    if (page) query.set("page", page);
+
+    const limit = searchParams.get("limit")?.trim();
+    if (limit) query.set("limit", limit);
 
     const upstreamPath =
       query.size > 0 ? `/admin/logs?${query.toString()}` : "/admin/logs";
@@ -17,7 +35,7 @@ export async function GET(request: Request) {
     const response = await fetch(buildMusicServerUrl(upstreamPath), {
       cache: "no-store",
       headers: {
-        Accept: "application/json, text/plain;q=0.9, */*;q=0.8",
+        Accept: "application/json",
       },
     });
 
@@ -27,7 +45,7 @@ export async function GET(request: Request) {
       status: response.status,
       headers: {
         "Content-Type":
-          response.headers.get("content-type") ?? "text/plain; charset=utf-8",
+          response.headers.get("content-type") ?? "application/json",
       },
     });
   } catch (error) {

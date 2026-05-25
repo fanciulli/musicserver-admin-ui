@@ -1,48 +1,58 @@
 "use client";
-import { EmailIcon, PasswordIcon } from "@/assets/icons";
-import Link from "next/link";
+
+import { UserIcon, PasswordIcon } from "@/assets/icons";
 import React, { useState } from "react";
 import InputGroup from "../FormElements/InputGroup";
-import { Checkbox } from "../FormElements/checkbox";
+import { useRouter } from "next/navigation";
 
 export default function SigninWithPassword() {
-  const [data, setData] = useState({
-    email: process.env.NEXT_PUBLIC_DEMO_USER_MAIL || "",
-    password: process.env.NEXT_PUBLIC_DEMO_USER_PASS || "",
-    remember: false,
-  });
-
+  const router = useRouter();
+  const [data, setData] = useState({ username: "", password: "" });
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData({
-      ...data,
-      [e.target.name]: e.target.value,
-    });
+    setData({ ...data, [e.target.name]: e.target.value });
+    setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // You can remove this code block
     setLoading(true);
+    setError(null);
 
-    setTimeout(() => {
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        router.push("/");
+        router.refresh();
+      } else {
+        const json = await response.json().catch(() => ({}));
+        setError(json.error ?? "Login failed");
+      }
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <InputGroup
-        type="email"
-        label="Email"
+        type="text"
+        label="Username"
         className="mb-4 [&_input]:py-[15px]"
-        placeholder="Enter your email"
-        name="email"
+        placeholder="Enter your username"
+        name="username"
         handleChange={handleChange}
-        value={data.email}
-        icon={<EmailIcon />}
+        value={data.username}
+        icon={<UserIcon />}
       />
 
       <InputGroup
@@ -56,37 +66,21 @@ export default function SigninWithPassword() {
         icon={<PasswordIcon />}
       />
 
-      <div className="mb-6 flex items-center justify-between gap-2 py-2 font-medium">
-        <Checkbox
-          label="Remember me"
-          name="remember"
-          withIcon="check"
-          minimal
-          radius="md"
-          onChange={(e) =>
-            setData({
-              ...data,
-              remember: e.target.checked,
-            })
-          }
-        />
-
-        <Link
-          href="/auth/forgot-password"
-          className="hover:text-primary dark:text-white dark:hover:text-primary"
-        >
-          Forgot Password?
-        </Link>
-      </div>
+      {error && (
+        <p className="mb-4 rounded-lg bg-red-50 px-4 py-2 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">
+          {error}
+        </p>
+      )}
 
       <div className="mb-4.5">
         <button
           type="submit"
-          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary p-4 font-medium text-white transition hover:bg-opacity-90"
+          disabled={loading}
+          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary p-4 font-medium text-white transition hover:bg-opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
         >
           Sign In
           {loading && (
-            <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-t-transparent dark:border-primary dark:border-t-transparent" />
+            <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-t-transparent" />
           )}
         </button>
       </div>

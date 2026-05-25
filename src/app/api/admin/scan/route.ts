@@ -1,4 +1,4 @@
-import { buildMusicServerUrl } from "@/lib/musicserver-api";
+import { buildMusicServerUrl, buildAdminJsonHeaders } from "@/lib/musicserver-api";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -6,10 +6,7 @@ export async function POST(request: NextRequest) {
     const body = await request.text();
     const response = await fetch(buildMusicServerUrl("/music/scan"), {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
+      headers: await buildAdminJsonHeaders(),
       body,
       cache: "no-store",
     });

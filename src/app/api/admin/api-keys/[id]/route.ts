@@ -1,4 +1,4 @@
-import { buildMusicServerUrl } from "@/lib/musicserver-api";
+import { buildMusicServerUrl, buildAdminHeaders } from "@/lib/musicserver-api";
 import { NextResponse } from "next/server";
 
 export async function DELETE(
@@ -9,7 +9,7 @@ export async function DELETE(
     const { id } = await params;
     const response = await fetch(
       buildMusicServerUrl(`/admin/api-keys/${encodeURIComponent(id)}`),
-      { method: "DELETE", cache: "no-store" },
+      { method: "DELETE", cache: "no-store", headers: await buildAdminHeaders() },
     );
     const text = await response.text();
     return new NextResponse(text, {

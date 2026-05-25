@@ -1,11 +1,15 @@
-import { buildMusicServerUrl } from "@/lib/musicserver-api";
+import {
+  buildMusicServerUrl,
+  buildAdminHeaders,
+  buildAdminJsonHeaders,
+} from "@/lib/musicserver-api";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   try {
     const response = await fetch(buildMusicServerUrl("/admin/api-keys"), {
       cache: "no-store",
-      headers: { Accept: "application/json" },
+      headers: await buildAdminHeaders(),
     });
     const text = await response.text();
     return new NextResponse(text, {
@@ -26,7 +30,7 @@ export async function POST(request: NextRequest) {
     const response = await fetch(buildMusicServerUrl("/admin/api-keys"), {
       method: "POST",
       cache: "no-store",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      headers: await buildAdminJsonHeaders(),
       body: JSON.stringify(body),
     });
     const text = await response.text();

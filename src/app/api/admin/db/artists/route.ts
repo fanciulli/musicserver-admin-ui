@@ -1,13 +1,11 @@
-import { buildMusicServerUrl } from "@/lib/musicserver-api";
+import { buildMusicServerUrl, buildAdminHeaders } from "@/lib/musicserver-api";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
     const response = await fetch(buildMusicServerUrl("/admin/db/artists"), {
       cache: "no-store",
-      headers: {
-        Accept: "application/json",
-      },
+      headers: await buildAdminHeaders(),
     });
 
     const text = await response.text();

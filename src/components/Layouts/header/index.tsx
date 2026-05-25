@@ -7,7 +7,7 @@ import { MenuIcon } from "./icons";
 import { ThemeToggleSwitch } from "./theme-toggle";
 import { UserInfo } from "./user-info";
 
-export function Header() {
+export function Header({ username }: { username: string }) {
   const { toggleSidebar, isMobile } = useSidebarContext();
 
   return (
@@ -42,7 +42,7 @@ export function Header() {
         <ThemeToggleSwitch />
 
         <div className="shrink-0">
-          <UserInfo />
+          <UserInfo username={username} />
         </div>
       </div>
     </header>

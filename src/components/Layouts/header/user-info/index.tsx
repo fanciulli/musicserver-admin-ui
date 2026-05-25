@@ -13,7 +13,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LogOutIcon, UserIcon } from "./icons";
 
-export function UserInfo() {
+const USER_IMG = "/images/user/admin-generic.svg";
+
+export function UserInfo({ username }: { username: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
@@ -24,12 +26,6 @@ export function UserInfo() {
     router.refresh();
   };
 
-  const USER = {
-    name: "Administrator",
-    email: "admin@example.com",
-    img: "/images/user/admin-generic.svg",
-  };
-
   return (
     <Dropdown isOpen={isOpen} setIsOpen={setIsOpen}>
       <DropdownTrigger className="rounded align-middle outline-none ring-primary ring-offset-2 focus-visible:ring-1 dark:ring-offset-gray-dark">
@@ -37,15 +33,15 @@ export function UserInfo() {
 
         <figure className="flex items-center gap-3">
           <Image
-            src={USER.img}
+            src={USER_IMG}
             className="size-12"
-            alt={`Avatar of ${USER.name}`}
+            alt={`Avatar of ${username}`}
             role="presentation"
             width={200}
             height={200}
           />
           <figcaption className="flex items-center gap-1 font-medium text-dark dark:text-dark-6 max-[1024px]:sr-only">
-            <span>{USER.name}</span>
+            <span>{username}</span>
 
             <ChevronUpIcon
               aria-hidden
@@ -65,25 +61,6 @@ export function UserInfo() {
       >
         <h2 className="sr-only">User information</h2>
 
-        <figure className="flex items-center gap-2.5 px-5 py-3.5">
-          <Image
-            src={USER.img}
-            className="size-12"
-            alt={`Avatar for ${USER.name}`}
-            role="presentation"
-            width={200}
-            height={200}
-          />
-
-          <figcaption className="space-y-1 text-base font-medium">
-            <div className="leading-none text-dark dark:text-white">
-              {USER.name}
-            </div>
-          </figcaption>
-        </figure>
-
-        <hr className="border-[#E8E8E8] dark:border-dark-3" />
-
         <div className="p-2 text-base text-[#4B5563] dark:text-dark-6 [&>*]:cursor-pointer">
           <Link
             href={"/profile"}
@@ -94,7 +71,6 @@ export function UserInfo() {
 
             <span className="mr-auto text-base font-medium">View profile</span>
           </Link>
-
         </div>
 
         <hr className="border-[#E8E8E8] dark:border-dark-3" />

@@ -1,6 +1,7 @@
 "use client";
 
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import ChangePassword from "@/components/Auth/ChangePassword";
 import Image from "next/image";
 
 import { useState } from "react";
@@ -148,6 +149,10 @@ export default function Page() {
             <SocialAccounts />
           </div>
         </div>
+      </div>
+
+      <div className="mt-6">
+        <ChangePassword />
       </div>
     </div>
   );

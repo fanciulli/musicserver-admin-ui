@@ -1,7 +1,5 @@
 import Signin from "@/components/Auth/Signin";
-import logoIcon from "@/assets/logos/icon.svg";
 import type { Metadata } from "next";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -10,17 +8,13 @@ export const metadata: Metadata = {
 export default function SignIn() {
   return (
     <div className="w-full max-w-[480px] rounded-2xl bg-white p-8 shadow-2xl dark:bg-gray-dark">
-      <div className="mb-8 flex flex-col items-center gap-4">
-        <Image
-          src={logoIcon}
-          width={40}
-          height={38}
-          alt="Music Server"
-          priority
-        />
-        <h1 className="text-xl font-bold text-dark dark:text-white">
-          Administrator console
+      <div className="mb-8 flex flex-col items-center gap-1">
+        <h1 className="text-2xl font-bold text-dark dark:text-white">
+          Music Server
         </h1>
+        <p className="text-lg font-medium text-gray-500 dark:text-dark-6">
+          Administrator console
+        </p>
       </div>
 
       <Signin />

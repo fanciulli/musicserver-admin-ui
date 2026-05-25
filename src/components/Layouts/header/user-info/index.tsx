@@ -76,11 +76,9 @@ export function UserInfo() {
           />
 
           <figcaption className="space-y-1 text-base font-medium">
-            <div className="mb-2 leading-none text-dark dark:text-white">
+            <div className="leading-none text-dark dark:text-white">
               {USER.name}
             </div>
-
-            <div className="leading-none text-gray-6">{USER.email}</div>
           </figcaption>
         </figure>
 

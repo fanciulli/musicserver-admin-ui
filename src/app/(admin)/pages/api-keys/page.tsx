@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function ApiKeysPage() {
   return (
-    <div className="mx-auto w-full max-w-[1080px]">
+    <div className="space-y-6">
       <Breadcrumb pageName="API Keys" />
       <ApiKeysCard />
     </div>

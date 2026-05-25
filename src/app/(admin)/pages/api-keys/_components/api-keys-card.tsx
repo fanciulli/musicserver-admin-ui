@@ -134,13 +134,7 @@ export function ApiKeysCard() {
 
   return (
     <section className="rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card sm:p-7.5">
-      <div className="mb-5 flex items-center justify-between gap-3">
-        <div>
-          <h2 className="text-xl font-semibold text-dark dark:text-white">API Keys</h2>
-          <p className="mt-1 text-sm text-dark-4 dark:text-dark-6">
-            Manage API keys for authenticating music API requests.
-          </p>
-        </div>
+      <div className="mb-5 flex items-center justify-end">
         <button
           className="inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
           onClick={openCreate}

@@ -18,6 +18,10 @@ export default function SignIn() {
       </div>
 
       <Signin />
+
+      <p className="mt-6 text-center text-sm text-gray-400 dark:text-dark-6">
+        &copy;2026 Massimiliano Fanciulli
+      </p>
     </div>
   );
 }

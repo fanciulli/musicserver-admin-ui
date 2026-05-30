@@ -1,9 +1,9 @@
-import { buildMusicServerUrl } from "@/lib/musicserver-api";
+import { buildMusicServerUrl, backendFetch } from "@/lib/musicserver-api";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const response = await fetch(buildMusicServerUrl("/admin/plugins"), {
+    const response = await backendFetch(buildMusicServerUrl("/admin/plugins"), {
       cache: "no-store",
       headers: {
         Accept: "application/json",

@@ -1,4 +1,4 @@
-import { buildMusicServerUrl } from "@/lib/musicserver-api";
+import { buildMusicServerUrl, buildAdminHeaders } from "@/lib/musicserver-api";
 import { NextResponse } from "next/server";
 
 type RouteContext = {
@@ -16,9 +16,7 @@ export async function GET(_request: Request, context: RouteContext) {
       ),
       {
         cache: "no-store",
-        headers: {
-          Accept: "application/json",
-        },
+        headers: await buildAdminHeaders(),
       },
     );
 

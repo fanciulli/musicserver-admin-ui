@@ -1,4 +1,4 @@
-import { buildMusicServerUrl } from "@/lib/musicserver-api";
+import { buildMusicServerUrl, backendFetch } from "@/lib/musicserver-api";
 import { NextRequest, NextResponse } from "next/server";
 
 const SESSION_MAX_AGE_SECONDS = 8 * 60 * 60;
@@ -6,7 +6,7 @@ const SESSION_MAX_AGE_SECONDS = 8 * 60 * 60;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const response = await fetch(buildMusicServerUrl("/admin/login"), {
+    const response = await backendFetch(buildMusicServerUrl("/admin/login"), {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify(body),

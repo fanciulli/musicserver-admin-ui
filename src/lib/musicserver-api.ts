@@ -2,6 +2,10 @@ import { cookies } from "next/headers";
 
 const DEFAULT_API_BASE_URL = "http://localhost:3000";
 
+// Alias kept so all API routes use a single import name — makes future
+// transport changes (e.g. cert pinning) a one-file edit.
+export const backendFetch = fetch;
+
 export function getMusicServerApiBaseUrl(): string {
   const envValue = process.env.MUSICSERVER_API_BASE_URL?.trim();
   return envValue && envValue.length > 0 ? envValue : DEFAULT_API_BASE_URL;

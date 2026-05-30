@@ -1,10 +1,10 @@
-import { buildMusicServerUrl, buildAdminJsonHeaders } from "@/lib/musicserver-api";
+import { buildMusicServerUrl, buildAdminJsonHeaders, backendFetch } from "@/lib/musicserver-api";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.text();
-    const response = await fetch(buildMusicServerUrl("/admin/plugins/stop"), {
+    const response = await backendFetch(buildMusicServerUrl("/admin/plugins/stop"), {
       method: "POST",
       headers: await buildAdminJsonHeaders(),
       body,

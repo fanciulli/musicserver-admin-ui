@@ -18,8 +18,18 @@ export default function SigninWithPassword() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
+
+    if (data.username.length < 4 || data.username.length > 16) {
+      setError("Username must be between 4 and 16 characters.");
+      return;
+    }
+    if (data.password.length < 8 || data.password.length > 64) {
+      setError("Password must be between 8 and 64 characters.");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const response = await fetch("/api/auth/login", {

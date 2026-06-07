@@ -1,6 +1,11 @@
 import { Database, Settings, Logs, KeyRound, ToyBrick } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
-export const NAV_DATA = [
+type NavSubItem = { title: string; url: string };
+type NavItem = { title: string; url?: string; icon: LucideIcon; items: NavSubItem[] };
+type NavSection = { label: string; icon?: LucideIcon; items: NavItem[] };
+
+export const NAV_DATA: NavSection[] = [
   {
     label: "MAIN MENU",
     items: [

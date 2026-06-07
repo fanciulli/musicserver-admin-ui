@@ -26,11 +26,10 @@ export async function POST(request: NextRequest) {
     );
 
     if (!response.ok) {
-      const text = await response.text();
-      return new NextResponse(text, {
-        status: response.status,
-        headers: { "Content-Type": "application/json" },
-      });
+      return NextResponse.json(
+        { error: response.status === 401 ? "Current password is incorrect" : "Failed to change password" },
+        { status: response.status },
+      );
     }
 
     const res = NextResponse.json({ success: true });

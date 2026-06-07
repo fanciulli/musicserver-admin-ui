@@ -13,11 +13,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (!response.ok) {
-      const text = await response.text();
-      return new NextResponse(text, {
-        status: response.status,
-        headers: { "Content-Type": "application/json" },
-      });
+      return NextResponse.json(
+        { error: response.status === 401 ? "Invalid credentials" : "Login failed" },
+        { status: response.status },
+      );
     }
 
     const { token } = (await response.json()) as { token: string };

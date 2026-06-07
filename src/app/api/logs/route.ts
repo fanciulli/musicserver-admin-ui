@@ -1,4 +1,4 @@
-import { buildMusicServerUrl } from "@/lib/musicserver-api";
+import { buildMusicServerUrl, buildAdminHeaders, backendFetch } from "@/lib/musicserver-api";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -32,11 +32,9 @@ export async function GET(request: Request) {
     const upstreamPath =
       query.size > 0 ? `/admin/logs?${query.toString()}` : "/admin/logs";
 
-    const response = await fetch(buildMusicServerUrl(upstreamPath), {
+    const response = await backendFetch(buildMusicServerUrl(upstreamPath), {
       cache: "no-store",
-      headers: {
-        Accept: "application/json",
-      },
+      headers: await buildAdminHeaders(),
     });
 
     const text = await response.text();

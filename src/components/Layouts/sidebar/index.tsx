@@ -89,7 +89,10 @@ export function Sidebar() {
           <div className="custom-scrollbar mt-6 flex-1 overflow-y-auto pr-3 min-[850px]:mt-10">
             {NAV_DATA.map((section) => (
               <div key={section.label} className="mb-6">
-                <h2 className="mb-5 text-sm font-medium text-dark-4 dark:text-dark-6">
+                <h2 className="mb-5 flex items-center gap-2 text-sm font-medium text-dark-4 dark:text-dark-6">
+                  {"icon" in section && section.icon && (
+                    <section.icon className="size-4 shrink-0" aria-hidden="true" />
+                  )}
                   {section.label}
                 </h2>
 
@@ -173,6 +176,10 @@ export function Sidebar() {
               </div>
             ))}
           </div>
+
+          <p className="pr-4 pt-6 text-center text-xs text-gray-400 dark:text-dark-6">
+            &copy;2026 Massimiliano Fanciulli
+          </p>
         </div>
       </aside>
     </>

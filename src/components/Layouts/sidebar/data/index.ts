@@ -1,4 +1,4 @@
-import * as Icons from "../icons";
+import { Database, Settings, Logs, KeyRound, ToyBrick } from "lucide-react";
 
 export const NAV_DATA = [
   {
@@ -7,19 +7,31 @@ export const NAV_DATA = [
       {
         title: "Database",
         url: "/database",
-        icon: Icons.FourCircle,
+        icon: Database,
         items: [],
       },
+    ],
+  },
+  {
+    label: "SETTINGS",
+    icon: Settings,
+    items: [
       {
         title: "Plugins",
         url: "/plugins",
-        icon: Icons.Table,
+        icon: ToyBrick,
+        items: [],
+      },
+      {
+        title: "API Keys",
+        url: "/pages/api-keys",
+        icon: KeyRound,
         items: [],
       },
       {
         title: "Logs",
         url: "/logs/main",
-        icon: Icons.Table,
+        icon: Logs,
         items: [],
       },
     ],

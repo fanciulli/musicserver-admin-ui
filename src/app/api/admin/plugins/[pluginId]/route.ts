@@ -1,4 +1,8 @@
-import { buildMusicServerUrl } from "@/lib/musicserver-api";
+import {
+  buildMusicServerUrl,
+  buildAdminHeaders,
+  buildAdminJsonHeaders,
+} from "@/lib/musicserver-api";
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
@@ -17,9 +21,7 @@ export async function GET(_request: Request, context: RouteContext) {
       ),
       {
         cache: "no-store",
-        headers: {
-          Accept: "application/json",
-        },
+        headers: await buildAdminHeaders(),
       },
     );
 
@@ -55,10 +57,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       ),
       {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
+        headers: await buildAdminJsonHeaders(),
         body,
         cache: "no-store",
       },

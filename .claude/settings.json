@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(node -e \"const l = require\\('lucide-react'\\); console.log\\('Database:', !!l.Database, 'Settings:', !!l.Settings, 'Logs:', !!l.Logs\\)\")",
+      "Bash(node -e \"const l = require\\('lucide-react'\\); console.log\\('KeyRound:', !!l.KeyRound, 'ToyBrick:', !!l.ToyBrick\\)\")"
+    ]
+  }
+}

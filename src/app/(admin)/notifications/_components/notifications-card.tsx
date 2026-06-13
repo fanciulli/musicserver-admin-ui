@@ -13,6 +13,7 @@ export function NotificationsCard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletingAll, setDeletingAll] = useState(false);
 
   const load = useCallback(async () => {
     setError(null);
@@ -65,11 +66,47 @@ export function NotificationsCard() {
     }
   };
 
+  const removeAll = async () => {
+    setDeletingAll(true);
+    setError(null);
+    try {
+      const results = await Promise.all(
+        items.map((item) =>
+          apiFetch(`/api/admin/notifications/${item.id}`, { method: "DELETE" }),
+        ),
+      );
+      if (results.some((response) => !response.ok)) {
+        throw new Error("Failed to delete some notifications");
+      }
+      setItems([]);
+    } catch (e) {
+      setError(
+        e instanceof Error ? e.message : "Failed to delete all notifications",
+      );
+      await load();
+    } finally {
+      setDeletingAll(false);
+    }
+  };
+
   return (
     <div className="rounded-[10px] bg-white p-4 shadow-1 dark:bg-gray-dark dark:shadow-card sm:p-6">
-      <h2 className="mb-4 text-2xl font-bold text-dark dark:text-white">
-        Notifications
-      </h2>
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <h2 className="text-2xl font-bold text-dark dark:text-white">
+          Notifications
+        </h2>
+
+        {items.length > 0 && (
+          <button
+            type="button"
+            onClick={() => void removeAll()}
+            disabled={deletingAll}
+            className="rounded-lg bg-red px-4 py-2 text-sm font-medium text-white outline-none transition-colors hover:bg-red-dark focus-visible:ring-2 focus-visible:ring-red disabled:opacity-50"
+          >
+            {deletingAll ? "Deleting…" : "Delete All"}
+          </button>
+        )}
+      </div>
 
       {error && (
         <p className="mb-4 text-sm font-medium text-red">{error}</p>

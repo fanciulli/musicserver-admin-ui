@@ -1,5 +1,6 @@
 "use client";
 
+import { apiFetch } from "@/lib/api-client";
 import { useCallback, useEffect, useState } from "react";
 
 type LogsCardProps = {
@@ -91,7 +92,7 @@ export function LogsCard({ title, logKey }: LogsCardProps) {
         if (opts.from) query.set("from", new Date(opts.from).toISOString());
         if (opts.to) query.set("to", new Date(opts.to).toISOString());
 
-        const response = await fetch(`/api/logs?${query.toString()}`, {
+        const response = await apiFetch(`/api/logs?${query.toString()}`, {
           cache: "no-store",
         });
 

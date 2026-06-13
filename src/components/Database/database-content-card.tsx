@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { apiFetch } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 
@@ -196,7 +197,7 @@ export function DatabaseContentCard() {
     setSummaryError(null);
 
     try {
-      const response = await fetch("/api/admin/db/summary", {
+      const response = await apiFetch("/api/admin/db/summary", {
         cache: "no-store",
       });
       if (!response.ok) {
@@ -221,7 +222,7 @@ export function DatabaseContentCard() {
     }));
 
     try {
-      const response = await fetch("/api/admin/db/artists", {
+      const response = await apiFetch("/api/admin/db/artists", {
         cache: "no-store",
       });
       if (!response.ok) {
@@ -251,7 +252,7 @@ export function DatabaseContentCard() {
     });
 
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         `/api/admin/db/artists/${encodeURIComponent(artistId)}/albums`,
         {
           cache: "no-store",
@@ -284,7 +285,7 @@ export function DatabaseContentCard() {
     });
 
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         `/api/admin/db/albums/${encodeURIComponent(albumId)}/songs`,
         {
           cache: "no-store",

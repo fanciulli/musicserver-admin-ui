@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { apiFetch } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -140,7 +141,9 @@ export function PluginsCard() {
     setError(null);
 
     try {
-      const response = await fetch("/api/admin/plugins", { cache: "no-store" });
+      const response = await apiFetch("/api/admin/plugins", {
+        cache: "no-store",
+      });
       if (!response.ok) {
         throw new Error(`Failed to load plugins (${response.status})`);
       }
@@ -190,7 +193,7 @@ export function PluginsCard() {
         const payload =
           action === "scan" ? { id: plugin.id } : { pluginId: plugin.id };
 
-        const response = await fetch(endpoint, {
+        const response = await apiFetch(endpoint, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -235,7 +238,7 @@ export function PluginsCard() {
       setConfigureError(null);
 
       try {
-        const response = await fetch(
+        const response = await apiFetch(
           `/api/admin/plugins/${encodeURIComponent(configurePlugin.id)}`,
           {
             cache: "no-store",
@@ -305,7 +308,7 @@ export function PluginsCard() {
     setConfigureError(null);
 
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         `/api/admin/plugins/${encodeURIComponent(configurePlugin.id)}`,
         {
           method: "PUT",

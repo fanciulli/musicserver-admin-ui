@@ -34,12 +34,14 @@ type PluginVariableType = "string" | "number" | "boolean";
 type PluginVariableEntry = {
   name: string;
   type: PluginVariableType;
+  label: string;
 };
 
 type PluginSettingsResponse = {
   pluginId: string;
   settings: {
     variables: Array<Record<string, string>>;
+    labels: Record<string, string>;
     values: Record<string, unknown>;
   };
 };
@@ -90,6 +92,7 @@ function normalizeVariableType(value: string): PluginVariableType {
 
 function parsePluginVariables(
   rawVariables: Array<Record<string, string>>,
+  labels: Record<string, string>,
 ): PluginVariableEntry[] {
   const parsed: PluginVariableEntry[] = [];
 
@@ -98,6 +101,7 @@ function parsePluginVariables(
       parsed.push({
         name,
         type: normalizeVariableType(type),
+        label: labels[name] ?? formatVariableLabel(name),
       });
     }
   }
@@ -266,7 +270,7 @@ export function PluginsCard() {
           return;
         }
 
-        setConfigureVariables(parsePluginVariables(payload.settings.variables));
+        setConfigureVariables(parsePluginVariables(payload.settings.variables, payload.settings.labels ?? {}));
         setConfigureValues(payload.settings.values ?? {});
       } catch (configError) {
         if (!isMounted) {
@@ -540,7 +544,7 @@ export function PluginsCard() {
                     return (
                       <label key={variable.name} className="block">
                         <span className="mb-2 block text-xs font-semibold uppercase tracking-wide text-dark-4 dark:text-dark-6">
-                          {formatVariableLabel(variable.name)}
+                          {variable.label}
                         </span>
                         <select
                           value={value === true ? "true" : "false"}
@@ -562,7 +566,7 @@ export function PluginsCard() {
                   return (
                     <label key={variable.name} className="block">
                       <span className="mb-2 block text-xs font-semibold uppercase tracking-wide text-dark-4 dark:text-dark-6">
-                        {formatVariableLabel(variable.name)}
+                        {variable.label}
                       </span>
                       <input
                         type={variable.type === "number" ? "number" : "text"}

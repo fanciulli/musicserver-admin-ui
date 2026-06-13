@@ -10,7 +10,10 @@ import { cn } from "@/lib/utils";
 import { apiFetch } from "@/lib/api-client";
 import { formatMessageTime } from "@/lib/format-message-time";
 import { getNotificationStyle } from "@/lib/notification-style";
-import type { Notification } from "@/types/notification";
+import {
+  NOTIFICATIONS_REFRESH_EVENT,
+  type Notification,
+} from "@/types/notification";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { BellIcon } from "./icons";
@@ -37,7 +40,12 @@ export function Notification() {
   useEffect(() => {
     void load();
     const interval = setInterval(() => void load(), POLL_INTERVAL_MS);
-    return () => clearInterval(interval);
+    const onRefresh = () => void load();
+    window.addEventListener(NOTIFICATIONS_REFRESH_EVENT, onRefresh);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener(NOTIFICATIONS_REFRESH_EVENT, onRefresh);
+    };
   }, [load]);
 
   const unreadCount = items.filter((item) => !item.read).length;

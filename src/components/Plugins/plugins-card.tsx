@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { apiFetch } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
+import { NOTIFICATIONS_REFRESH_EVENT } from "@/types/notification";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type PluginStatus = "loaded" | "started" | "error" | "disabled" | "unknown";
@@ -203,6 +204,15 @@ export function PluginsCard() {
 
         if (!response.ok) {
           throw new Error(`Action ${action} failed (${response.status})`);
+        }
+
+        if (action === "scan") {
+          // Give the backend a moment to emit the "scan started" notification,
+          // then refresh the header bell.
+          setTimeout(
+            () => window.dispatchEvent(new Event(NOTIFICATIONS_REFRESH_EVENT)),
+            1000,
+          );
         }
 
         await loadPlugins();

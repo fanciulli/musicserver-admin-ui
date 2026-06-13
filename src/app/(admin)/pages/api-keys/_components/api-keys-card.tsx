@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { apiFetch } from "@/lib/api-client";
 import { useCallback, useEffect, useState } from "react";
 
 type ApiKey = {
@@ -65,7 +66,9 @@ export function ApiKeysCard() {
   const loadKeys = useCallback(async () => {
     setError(null);
     try {
-      const response = await fetch("/api/admin/api-keys", { cache: "no-store" });
+      const response = await apiFetch("/api/admin/api-keys", {
+        cache: "no-store",
+      });
       if (!response.ok) throw new Error(`Failed to load keys (${response.status})`);
       setKeys((await response.json()) as ApiKey[]);
     } catch (e) {
@@ -100,7 +103,7 @@ export function ApiKeysCard() {
     setCreating(true);
     setCreateError(null);
     try {
-      const response = await fetch("/api/admin/api-keys", {
+      const response = await apiFetch("/api/admin/api-keys", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: createName.trim(), durationDays: createDuration }),
@@ -120,7 +123,7 @@ export function ApiKeysCard() {
     setDeletingId(id);
     setError(null);
     try {
-      const response = await fetch(`/api/admin/api-keys/${encodeURIComponent(id)}`, {
+      const response = await apiFetch(`/api/admin/api-keys/${encodeURIComponent(id)}`, {
         method: "DELETE",
       });
       if (!response.ok) throw new Error(`Delete failed (${response.status})`);

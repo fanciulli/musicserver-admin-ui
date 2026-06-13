@@ -15,6 +15,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { BellIcon } from "./icons";
 
+const POLL_INTERVAL_MS = 10_000;
+
 export function Notification() {
   const [isOpen, setIsOpen] = useState(false);
   const [items, setItems] = useState<Notification[]>([]);
@@ -34,6 +36,8 @@ export function Notification() {
 
   useEffect(() => {
     void load();
+    const interval = setInterval(() => void load(), POLL_INTERVAL_MS);
+    return () => clearInterval(interval);
   }, [load]);
 
   const unreadCount = items.filter((item) => !item.read).length;

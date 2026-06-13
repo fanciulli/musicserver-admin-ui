@@ -78,10 +78,11 @@ export function Notification() {
           {unreadCount > 0 && (
             <span
               className={cn(
-                "absolute right-0 top-0 z-1 size-2 rounded-full bg-red-light ring-2 ring-gray-2 dark:ring-dark-3",
+                "absolute -right-1.5 -top-1.5 z-1 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-red px-1 text-[10px] font-medium leading-none text-white ring-2 ring-gray-2 dark:ring-dark-3",
               )}
+              aria-label={`${unreadCount} unread notifications`}
             >
-              <span className="absolute inset-0 -z-1 animate-ping rounded-full bg-red-light opacity-75" />
+              {unreadCount > 99 ? "99+" : unreadCount}
             </span>
           )}
         </span>

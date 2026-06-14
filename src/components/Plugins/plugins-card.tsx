@@ -542,23 +542,32 @@ export function PluginsCard() {
 
                   if (variable.type === "boolean") {
                     return (
-                      <label key={variable.name} className="block">
-                        <span className="mb-2 block text-xs font-semibold tracking-wide text-dark-4 dark:text-dark-6">
+                      <label
+                        key={variable.name}
+                        className="flex cursor-pointer items-center gap-3"
+                      >
+                        <div className="relative">
+                          <input
+                            type="checkbox"
+                            className="sr-only"
+                            checked={value === true}
+                            onChange={(event) => {
+                              setConfigureValues((previousValues) => ({
+                                ...previousValues,
+                                [variable.name]: event.target.checked,
+                              }));
+                            }}
+                          />
+                          <div
+                            className={`h-6 w-11 rounded-full transition-colors ${value === true ? "bg-primary" : "bg-gray-300 dark:bg-dark-3"}`}
+                          />
+                          <div
+                            className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${value === true ? "translate-x-5.5" : "translate-x-0.5"}`}
+                          />
+                        </div>
+                        <span className="text-sm font-semibold text-dark dark:text-white">
                           {variable.label}
                         </span>
-                        <select
-                          value={value === true ? "true" : "false"}
-                          onChange={(event) => {
-                            setConfigureValues((previousValues) => ({
-                              ...previousValues,
-                              [variable.name]: event.target.value === "true",
-                            }));
-                          }}
-                          className="w-full rounded-lg border border-stroke bg-white px-3 py-2 text-sm text-dark outline-none transition focus:border-primary dark:border-dark-3 dark:bg-dark-2 dark:text-white"
-                        >
-                          <option value="true">true</option>
-                          <option value="false">false</option>
-                        </select>
                       </label>
                     );
                   }

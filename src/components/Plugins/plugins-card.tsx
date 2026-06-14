@@ -12,6 +12,7 @@ import { apiFetch } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import { NOTIFICATIONS_REFRESH_EVENT } from "@/types/notification";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 type PluginStatus = "loaded" | "started" | "error" | "disabled" | "unknown";
 
@@ -498,7 +499,7 @@ export function PluginsCard() {
         </TableBody>
       </Table>
 
-      {configurePlugin !== null && (
+      {configurePlugin !== null && createPortal(
         <div
           className="fixed inset-0 z-99999 flex items-center justify-center bg-dark/60 px-4"
           onClick={() => {
@@ -621,7 +622,8 @@ export function PluginsCard() {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </section>
   );

@@ -546,6 +546,9 @@ export function PluginsCard() {
                         key={variable.name}
                         className="flex cursor-pointer items-center gap-3"
                       >
+                        <span className="w-1/3 shrink-0 text-sm font-semibold text-dark dark:text-white">
+                          {variable.label}
+                        </span>
                         <div className="relative">
                           <input
                             type="checkbox"
@@ -565,9 +568,6 @@ export function PluginsCard() {
                             className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${value === true ? "translate-x-5.5" : "translate-x-0.5"}`}
                           />
                         </div>
-                        <span className="text-sm font-semibold text-dark dark:text-white">
-                          {variable.label}
-                        </span>
                       </label>
                     );
                   }

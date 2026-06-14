@@ -565,7 +565,7 @@ export function PluginsCard() {
 
                   return (
                     <label key={variable.name} className="block">
-                      <span className="mb-2 block text-xs font-semibold uppercase tracking-wide text-dark-4 dark:text-dark-6">
+                      <span className="mb-2 block text-xs font-semibold tracking-wide text-dark-4 dark:text-dark-6">
                         {variable.label}
                       </span>
                       <input

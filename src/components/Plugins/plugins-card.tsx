@@ -573,8 +573,8 @@ export function PluginsCard() {
                   }
 
                   return (
-                    <label key={variable.name} className="block">
-                      <span className="mb-2 block text-xs font-semibold tracking-wide text-dark-4 dark:text-dark-6">
+                    <label key={variable.name} className="flex items-center gap-3">
+                      <span className="w-1/3 shrink-0 text-sm font-semibold text-dark dark:text-white">
                         {variable.label}
                       </span>
                       <input
@@ -591,7 +591,7 @@ export function PluginsCard() {
                             event.target.value,
                           );
                         }}
-                        className="w-full rounded-lg border border-stroke bg-white px-3 py-2 text-sm text-dark outline-none transition focus:border-primary dark:border-dark-3 dark:bg-dark-2 dark:text-white"
+                        className="min-w-0 flex-1 rounded-lg border border-stroke bg-white px-3 py-2 text-sm text-dark outline-none transition focus:border-primary dark:border-dark-3 dark:bg-dark-2 dark:text-white"
                       />
                     </label>
                   );

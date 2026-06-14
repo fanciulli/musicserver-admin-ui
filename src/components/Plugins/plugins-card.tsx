@@ -12,6 +12,7 @@ import { apiFetch } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import { NOTIFICATIONS_REFRESH_EVENT } from "@/types/notification";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 type PluginStatus = "loaded" | "started" | "error" | "disabled" | "unknown";
 
@@ -34,12 +35,14 @@ type PluginVariableType = "string" | "number" | "boolean";
 type PluginVariableEntry = {
   name: string;
   type: PluginVariableType;
+  label: string;
 };
 
 type PluginSettingsResponse = {
   pluginId: string;
   settings: {
     variables: Array<Record<string, string>>;
+    labels: Record<string, string>;
     values: Record<string, unknown>;
   };
 };
@@ -90,6 +93,7 @@ function normalizeVariableType(value: string): PluginVariableType {
 
 function parsePluginVariables(
   rawVariables: Array<Record<string, string>>,
+  labels: Record<string, string>,
 ): PluginVariableEntry[] {
   const parsed: PluginVariableEntry[] = [];
 
@@ -98,6 +102,7 @@ function parsePluginVariables(
       parsed.push({
         name,
         type: normalizeVariableType(type),
+        label: labels[name] ?? formatVariableLabel(name),
       });
     }
   }
@@ -266,7 +271,7 @@ export function PluginsCard() {
           return;
         }
 
-        setConfigureVariables(parsePluginVariables(payload.settings.variables));
+        setConfigureVariables(parsePluginVariables(payload.settings.variables, payload.settings.labels ?? {}));
         setConfigureValues(payload.settings.values ?? {});
       } catch (configError) {
         if (!isMounted) {
@@ -494,7 +499,7 @@ export function PluginsCard() {
         </TableBody>
       </Table>
 
-      {configurePlugin !== null && (
+      {configurePlugin !== null && createPortal(
         <div
           className="fixed inset-0 z-99999 flex items-center justify-center bg-dark/60 px-4"
           onClick={() => {
@@ -538,31 +543,40 @@ export function PluginsCard() {
 
                   if (variable.type === "boolean") {
                     return (
-                      <label key={variable.name} className="block">
-                        <span className="mb-2 block text-xs font-semibold uppercase tracking-wide text-dark-4 dark:text-dark-6">
-                          {formatVariableLabel(variable.name)}
+                      <label
+                        key={variable.name}
+                        className="flex cursor-pointer items-center gap-3"
+                      >
+                        <span className="w-1/3 shrink-0 text-sm font-semibold text-dark dark:text-white">
+                          {variable.label}
                         </span>
-                        <select
-                          value={value === true ? "true" : "false"}
-                          onChange={(event) => {
-                            setConfigureValues((previousValues) => ({
-                              ...previousValues,
-                              [variable.name]: event.target.value === "true",
-                            }));
-                          }}
-                          className="w-full rounded-lg border border-stroke bg-white px-3 py-2 text-sm text-dark outline-none transition focus:border-primary dark:border-dark-3 dark:bg-dark-2 dark:text-white"
-                        >
-                          <option value="true">true</option>
-                          <option value="false">false</option>
-                        </select>
+                        <div className="relative">
+                          <input
+                            type="checkbox"
+                            className="sr-only"
+                            checked={value === true}
+                            onChange={(event) => {
+                              setConfigureValues((previousValues) => ({
+                                ...previousValues,
+                                [variable.name]: event.target.checked,
+                              }));
+                            }}
+                          />
+                          <div
+                            className={`h-6 w-11 rounded-full transition-colors ${value === true ? "bg-primary" : "bg-gray-300 dark:bg-dark-3"}`}
+                          />
+                          <div
+                            className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${value === true ? "translate-x-5.5" : "translate-x-0.5"}`}
+                          />
+                        </div>
                       </label>
                     );
                   }
 
                   return (
-                    <label key={variable.name} className="block">
-                      <span className="mb-2 block text-xs font-semibold uppercase tracking-wide text-dark-4 dark:text-dark-6">
-                        {formatVariableLabel(variable.name)}
+                    <label key={variable.name} className="flex items-center gap-3">
+                      <span className="w-1/3 shrink-0 text-sm font-semibold text-dark dark:text-white">
+                        {variable.label}
                       </span>
                       <input
                         type={variable.type === "number" ? "number" : "text"}
@@ -578,7 +592,7 @@ export function PluginsCard() {
                             event.target.value,
                           );
                         }}
-                        className="w-full rounded-lg border border-stroke bg-white px-3 py-2 text-sm text-dark outline-none transition focus:border-primary dark:border-dark-3 dark:bg-dark-2 dark:text-white"
+                        className="min-w-0 flex-1 rounded-lg border border-stroke bg-white px-3 py-2 text-sm text-dark outline-none transition focus:border-primary dark:border-dark-3 dark:bg-dark-2 dark:text-white"
                       />
                     </label>
                   );
@@ -608,7 +622,8 @@ export function PluginsCard() {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </section>
   );

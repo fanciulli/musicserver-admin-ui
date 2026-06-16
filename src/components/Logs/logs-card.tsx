@@ -23,7 +23,7 @@ type LogsResponse = {
 const PAGE_SIZES = [50, 100, 200] as const;
 const DEFAULT_LIMIT = 50;
 const DEFAULT_LEVEL = "info";
-const LEVELS = ["trace", "debug", "info", "warn", "error", "fatal"] as const;
+const LEVELS = ["debug", "info", "error"] as const;
 
 const LEVEL_STYLES: Record<string, string> = {
   fatal:
@@ -175,7 +175,6 @@ export function LogsCard({ title, logKey }: LogsCardProps) {
             value={pendingLevel}
             onChange={(e) => setPendingLevel(e.target.value)}
           >
-            <option value="">All</option>
             {LEVELS.map((l) => (
               <option key={l} value={l}>
                 {l.charAt(0).toUpperCase() + l.slice(1)}

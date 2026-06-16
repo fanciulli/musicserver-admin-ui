@@ -68,8 +68,10 @@ export function WizardModal() {
         <div className="flex flex-col gap-4 px-6 py-5">
           <p className="text-dark dark:text-white">{step.text}</p>
 
-          <div className="flex items-center justify-between">
-            <div>
+          {/* Equal-width columns keep the page indicator centered regardless
+              of which buttons are present. */}
+          <div className="grid grid-cols-3 items-center">
+            <div className="justify-self-start">
               {!isFirst && (
                 <button
                   type="button"
@@ -81,27 +83,29 @@ export function WizardModal() {
               )}
             </div>
 
-            <span className="text-sm text-dark-5 dark:text-dark-6">
+            <span className="justify-self-center text-sm text-dark-5 dark:text-dark-6">
               {stepIndex + 1} / {current.steps.length}
             </span>
 
-            {isLast ? (
-              <button
-                type="button"
-                onClick={() => void fetchNext()}
-                className="rounded-lg bg-primary px-5 py-2 font-medium text-white transition hover:bg-opacity-90"
-              >
-                Complete
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setStepIndex((i) => i + 1)}
-                className="rounded-lg bg-primary px-5 py-2 font-medium text-white transition hover:bg-opacity-90"
-              >
-                Next
-              </button>
-            )}
+            <div className="justify-self-end">
+              {isLast ? (
+                <button
+                  type="button"
+                  onClick={() => void fetchNext()}
+                  className="rounded-lg bg-primary px-5 py-2 font-medium text-white transition hover:bg-opacity-90"
+                >
+                  Complete
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setStepIndex((i) => i + 1)}
+                  className="rounded-lg bg-primary px-5 py-2 font-medium text-white transition hover:bg-opacity-90"
+                >
+                  Next
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

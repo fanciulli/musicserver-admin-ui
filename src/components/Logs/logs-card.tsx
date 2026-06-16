@@ -175,6 +175,7 @@ export function LogsCard({ title, logKey }: LogsCardProps) {
             value={pendingLevel}
             onChange={(e) => setPendingLevel(e.target.value)}
           >
+            <option value="">All</option>
             {LEVELS.map((l) => (
               <option key={l} value={l}>
                 {l.charAt(0).toUpperCase() + l.slice(1)}

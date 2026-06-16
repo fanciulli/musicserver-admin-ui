@@ -55,7 +55,7 @@ export function WizardModal() {
 
   return (
     <div className="fixed inset-0 z-99999 flex items-center justify-center bg-black/50 p-4">
-      <div className="flex w-full max-w-md flex-col overflow-hidden rounded-[10px] bg-white shadow-1 dark:bg-gray-dark dark:shadow-card md:w-1/3">
+      <div className="flex w-full max-w-xl flex-col overflow-hidden rounded-[10px] bg-white shadow-1 dark:bg-gray-dark dark:shadow-card md:w-2/5">
         {/* Graphics on top */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

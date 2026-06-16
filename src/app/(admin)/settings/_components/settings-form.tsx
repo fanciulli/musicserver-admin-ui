@@ -104,9 +104,6 @@ export function SettingsForm() {
         <h2 className="text-xl font-semibold text-dark dark:text-white">
           Settings
         </h2>
-        <p className="mt-1 text-sm text-dark-4 dark:text-dark-6">
-          Music Server configuration parameters.
-        </p>
       </div>
 
       {loadError && (

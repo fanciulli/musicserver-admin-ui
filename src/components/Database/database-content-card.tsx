@@ -477,12 +477,6 @@ export function DatabaseContentCard() {
           }
           columns={[
             {
-              key: "track",
-              label: "#",
-              className: "w-16",
-              render: (song) => song.trackNumber ?? "—",
-            },
-            {
               key: "name",
               label: "Title",
               render: (song) => (

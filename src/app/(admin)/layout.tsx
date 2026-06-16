@@ -1,5 +1,6 @@
 import { Sidebar } from "@/components/Layouts/sidebar";
 import { Header } from "@/components/Layouts/header";
+import { WizardModal } from "@/components/Wizard/wizard-modal";
 import type { PropsWithChildren } from "react";
 import { cookies } from "next/headers";
 
@@ -28,6 +29,8 @@ export default async function AdminLayout({ children }: PropsWithChildren) {
           {children}
         </main>
       </div>
+
+      <WizardModal />
     </div>
   );
 }

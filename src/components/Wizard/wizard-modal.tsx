@@ -64,9 +64,12 @@ export function WizardModal() {
           className="aspect-video w-full bg-gray-1 object-cover dark:bg-dark-2"
         />
 
-        {/* Text below */}
+        {/* Text below. The fixed min-height keeps every step the same overall
+            height regardless of how many lines the text wraps to. */}
         <div className="flex flex-col gap-4 px-6 py-5">
-          <p className="text-center text-dark dark:text-white">{step.text}</p>
+          <div className="flex min-h-[4.5rem] items-center justify-center">
+            <p className="text-center text-dark dark:text-white">{step.text}</p>
+          </div>
 
           {/* Equal-width columns keep the page indicator centered regardless
               of which buttons are present. */}

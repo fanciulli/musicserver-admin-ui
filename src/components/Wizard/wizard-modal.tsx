@@ -66,7 +66,7 @@ export function WizardModal() {
 
         {/* Text below */}
         <div className="flex flex-col gap-4 px-6 py-5">
-          <p className="text-dark dark:text-white">{step.text}</p>
+          <p className="text-center text-dark dark:text-white">{step.text}</p>
 
           {/* Equal-width columns keep the page indicator centered regardless
               of which buttons are present. */}

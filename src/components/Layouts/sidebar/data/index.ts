@@ -1,4 +1,4 @@
-import { Database, Settings, Logs, KeyRound, ToyBrick } from "lucide-react";
+import { Database, Settings, Logs, KeyRound, ToyBrick, SlidersHorizontal } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 type NavSubItem = { title: string; url: string };
@@ -21,6 +21,12 @@ export const NAV_DATA: NavSection[] = [
     label: "SETTINGS",
     icon: Settings,
     items: [
+      {
+        title: "Configuration",
+        url: "/settings",
+        icon: SlidersHorizontal,
+        items: [],
+      },
       {
         title: "Plugins",
         url: "/plugins",

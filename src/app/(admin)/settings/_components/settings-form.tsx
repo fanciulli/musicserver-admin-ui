@@ -64,39 +64,31 @@ export function SettingsForm() {
     setSavedNotice(false);
 
     try {
+      // PUT returns no body: 2xx on success, 400 (without details) when one or
+      // more values are invalid. Reload current config from GET after saving.
       const response = await apiFetch("/api/admin/config", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ values }),
       });
 
-      const payload = await response.json().catch(() => null);
-
       if (!response.ok) {
-        const message =
-          (payload && typeof payload.error === "string" && payload.error) ||
-          `Failed to save configuration (${response.status})`;
-        setModalError(message);
+        setModalError(
+          response.status === 400
+            ? "One or more configuration values are invalid."
+            : `Failed to save configuration (${response.status})`,
+        );
         return;
       }
 
-      if (!Array.isArray(payload)) {
-        setModalError("Unexpected response from server");
-        return;
-      }
-
-      const data = payload as ConfigItem[];
-      setItems(data);
-      setValues(
-        Object.fromEntries(data.map((item) => [item.key, item.value])),
-      );
       setSavedNotice(true);
+      await loadConfig();
     } catch (error) {
       setModalError(toErrorMessage(error, "Failed to save configuration"));
     } finally {
       setSaving(false);
     }
-  }, [values]);
+  }, [values, loadConfig]);
 
   return (
     <section className="rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card sm:p-7.5">

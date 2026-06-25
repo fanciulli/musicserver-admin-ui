@@ -24,7 +24,9 @@ export async function POST(request: NextRequest) {
     const res = NextResponse.json({ success: true });
     res.cookies.set("session_token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      // Mark Secure only when actually served over HTTPS; otherwise the browser
+      // drops the cookie over a plain-HTTP (e.g. loopback) connection.
+      secure: process.env.HTTPS_ENABLED === "true",
       sameSite: "strict",
       path: "/",
       maxAge: SESSION_MAX_AGE_SECONDS,

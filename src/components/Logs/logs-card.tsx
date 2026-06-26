@@ -1,5 +1,6 @@
 "use client";
 
+import { Select } from "@/components/FormElements/select";
 import { apiFetch } from "@/lib/api-client";
 import { useCallback, useEffect, useState } from "react";
 
@@ -170,18 +171,19 @@ export function LogsCard({ title, logKey }: LogsCardProps) {
           <label className="text-xs font-medium text-dark-4 dark:text-dark-6">
             Level
           </label>
-          <select
-            className="rounded-lg border border-stroke bg-white px-3 py-2 text-sm text-dark dark:border-dark-3 dark:bg-dark-2 dark:text-white"
+          <Select
+            className="!space-y-0"
+            triggerClassName="min-w-[8rem] px-3 py-2 text-sm"
             value={pendingLevel}
-            onChange={(e) => setPendingLevel(e.target.value)}
-          >
-            <option value="">All</option>
-            {LEVELS.map((l) => (
-              <option key={l} value={l}>
-                {l.charAt(0).toUpperCase() + l.slice(1)}
-              </option>
-            ))}
-          </select>
+            onChange={setPendingLevel}
+            items={[
+              { value: "", label: "All" },
+              ...LEVELS.map((l) => ({
+                value: l,
+                label: l.charAt(0).toUpperCase() + l.slice(1),
+              })),
+            ]}
+          />
         </div>
 
         <div className="flex flex-col gap-1">
@@ -212,17 +214,16 @@ export function LogsCard({ title, logKey }: LogsCardProps) {
           <label className="text-xs font-medium text-dark-4 dark:text-dark-6">
             Page size
           </label>
-          <select
-            className="rounded-lg border border-stroke bg-white px-3 py-2 text-sm text-dark dark:border-dark-3 dark:bg-dark-2 dark:text-white"
-            value={pendingLimit}
-            onChange={(e) => setPendingLimit(Number(e.target.value))}
-          >
-            {PAGE_SIZES.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
+          <Select
+            className="!space-y-0"
+            triggerClassName="min-w-[5.5rem] px-3 py-2 text-sm"
+            value={String(pendingLimit)}
+            onChange={(v) => setPendingLimit(Number(v))}
+            items={PAGE_SIZES.map((s) => ({
+              value: String(s),
+              label: String(s),
+            }))}
+          />
         </div>
 
         <button

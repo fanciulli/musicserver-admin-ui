@@ -1,5 +1,6 @@
 "use client";
 
+import { Select } from "@/components/FormElements/select";
 import {
   Table,
   TableBody,
@@ -254,24 +255,23 @@ export function ApiKeysCard() {
                     />
                   </label>
 
-                  <label className="block">
+                  <div className="block">
                     <span className="mb-2 block text-xs font-semibold uppercase tracking-wide text-dark-4 dark:text-dark-6">
                       Duration
                     </span>
-                    <select
+                    <Select
+                      className="!space-y-0"
+                      triggerClassName="px-3 py-2 text-sm"
                       value={createDuration === null ? "null" : String(createDuration)}
-                      onChange={(e) =>
-                        setCreateDuration(e.target.value === "null" ? null : Number(e.target.value))
+                      onChange={(v) =>
+                        setCreateDuration(v === "null" ? null : Number(v))
                       }
-                      className="w-full rounded-lg border border-stroke bg-white px-3 py-2 text-sm text-dark outline-none transition focus:border-primary dark:border-dark-3 dark:bg-dark-2 dark:text-white"
-                    >
-                      {DURATION_OPTIONS.map((opt) => (
-                        <option key={String(opt.value)} value={String(opt.value)}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
+                      items={DURATION_OPTIONS.map((opt) => ({
+                        value: String(opt.value),
+                        label: opt.label,
+                      }))}
+                    />
+                  </div>
                 </div>
 
                 <div className="mt-6 flex justify-end gap-2">

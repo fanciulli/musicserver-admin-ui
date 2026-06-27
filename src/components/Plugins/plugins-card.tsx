@@ -337,9 +337,16 @@ export function PluginsCard() {
       );
 
       if (!response.ok) {
-        throw new Error(
-          `Failed to save plugin configuration (${response.status})`,
-        );
+        let errorMessage = `Failed to save plugin configuration (${response.status})`;
+        try {
+          const errorBody = (await response.json()) as { error?: string };
+          if (typeof errorBody.error === "string" && errorBody.error.length > 0) {
+            errorMessage = errorBody.error;
+          }
+        } catch {
+          // ignore parse failure, use fallback message
+        }
+        throw new Error(errorMessage);
       }
 
       await loadPlugins();

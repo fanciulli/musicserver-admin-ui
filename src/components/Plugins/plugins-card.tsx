@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useClickOutside } from "@/hooks/use-click-outside";
 import { apiFetch } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import { NOTIFICATIONS_REFRESH_EVENT } from "@/types/notification";
@@ -126,6 +127,132 @@ function formatCategoryLabel(category: string): string {
   }
 
   return category;
+}
+
+function MoreIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width={20}
+      height={20}
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      {...props}
+    >
+      <path d="M10 5.625a1.458 1.458 0 100-2.917 1.458 1.458 0 000 2.917zM10 11.458a1.458 1.458 0 100-2.916 1.458 1.458 0 000 2.916zM10 17.292a1.458 1.458 0 100-2.917 1.458 1.458 0 000 2.917z" />
+    </svg>
+  );
+}
+
+type PluginRowActionsProps = {
+  plugin: PluginItem;
+  isBusy: boolean;
+  busyLabel: string | null;
+  actionState: ActionState | null;
+  onConfigure: (plugin: PluginItem) => void;
+  onAction: (plugin: PluginItem, action: PluginAction) => void;
+};
+
+function PluginRowActions({
+  plugin,
+  isBusy,
+  busyLabel,
+  actionState,
+  onConfigure,
+  onAction,
+}: PluginRowActionsProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [menuPos, setMenuPos] = useState({ top: 0, right: 0 });
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
+
+  const itemClass =
+    "flex w-full items-center rounded-lg px-2.5 py-[9px] text-left text-sm font-medium text-dark transition hover:bg-gray-2 disabled:cursor-not-allowed disabled:opacity-50 dark:text-white dark:hover:bg-dark-3";
+
+  function runAndClose(action: PluginAction) {
+    setIsOpen(false);
+    onAction(plugin, action);
+  }
+
+  function toggleOpen() {
+    if (!isOpen && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setMenuPos({
+        top: rect.bottom + 4,
+        right: window.innerWidth - rect.right,
+      });
+    }
+
+    setIsOpen((open) => !open);
+  }
+
+  return (
+    <>
+      <button
+        ref={triggerRef}
+        onClick={toggleOpen}
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        className="rounded-lg p-2 text-dark transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:text-white dark:hover:bg-dark-2"
+      >
+        <span className="sr-only">Actions for {plugin.name}</span>
+        <MoreIcon aria-hidden />
+      </button>
+
+      {isOpen &&
+        createPortal(
+          <div
+            ref={menuRef}
+            role="menu"
+            style={{ top: menuPos.top, right: menuPos.right }}
+            className="fixed z-99999 min-w-[10rem] rounded-lg border border-stroke bg-white p-2 shadow-md dark:border-dark-3 dark:bg-gray-dark"
+          >
+            {plugin.status === "started" ? (
+          <>
+            <button
+              disabled={isBusy}
+              onClick={() => {
+                setIsOpen(false);
+                onConfigure(plugin);
+              }}
+              className={itemClass}
+            >
+              Configure
+            </button>
+
+            {canScan(plugin) ? (
+              <button
+                disabled={isBusy}
+                onClick={() => runAndClose("scan")}
+                className={itemClass}
+              >
+                {isBusy && actionState?.action === "scan"
+                  ? busyLabel
+                  : "Scan"}
+              </button>
+            ) : null}
+
+            <button
+              disabled={isBusy}
+              onClick={() => runAndClose("stop")}
+              className={cn(itemClass, "text-[#D34053] dark:text-[#D34053]")}
+            >
+              {isBusy && actionState?.action === "stop" ? busyLabel : "Stop"}
+            </button>
+          </>
+        ) : (
+          <button
+            disabled={isBusy}
+            onClick={() => runAndClose("start")}
+            className={cn(itemClass, "text-[#219653] dark:text-[#219653]")}
+          >
+            {isBusy && actionState?.action === "start" ? busyLabel : "Start"}
+          </button>
+        )}
+          </div>,
+          document.body,
+        )}
+    </>
+  );
 }
 
 export function PluginsCard() {
@@ -453,54 +580,17 @@ export function PluginsCard() {
                   </TableCell>
 
                   <TableCell>
-                    <div className="flex justify-end gap-2">
-                      {plugin.status === "started" ? (
-                        <>
-                          <button
-                            disabled={isBusy}
-                            onClick={() => {
-                              setConfigurePlugin(plugin);
-                            }}
-                            className="rounded-lg border border-stroke px-3 py-2 text-xs font-semibold text-dark transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-dark-3 dark:text-white dark:hover:bg-dark-2"
-                          >
-                            Configure
-                          </button>
-                          <button
-                            disabled={isBusy || !canScan(plugin)}
-                            onClick={() => {
-                              void runAction(plugin, "scan");
-                            }}
-                            className="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-                          >
-                            {isBusy && actionState?.action === "scan"
-                              ? busyLabel
-                              : "Scan"}
-                          </button>
-                          <button
-                            disabled={isBusy}
-                            onClick={() => {
-                              void runAction(plugin, "stop");
-                            }}
-                            className="rounded-lg border border-[#D34053] px-3 py-2 text-xs font-semibold text-[#D34053] transition hover:bg-[#D34053]/10 disabled:cursor-not-allowed disabled:opacity-50"
-                          >
-                            {isBusy && actionState?.action === "stop"
-                              ? busyLabel
-                              : "Stop"}
-                          </button>
-                        </>
-                      ) : (
-                        <button
-                          disabled={isBusy}
-                          onClick={() => {
-                            void runAction(plugin, "start");
-                          }}
-                          className="rounded-lg border border-[#219653] px-3 py-2 text-xs font-semibold text-[#219653] transition hover:bg-[#219653]/10 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                          {isBusy && actionState?.action === "start"
-                            ? busyLabel
-                            : "Start"}
-                        </button>
-                      )}
+                    <div className="flex justify-end">
+                      <PluginRowActions
+                        plugin={plugin}
+                        isBusy={isBusy}
+                        busyLabel={busyLabel}
+                        actionState={actionState}
+                        onConfigure={setConfigurePlugin}
+                        onAction={(target, action) => {
+                          void runAction(target, action);
+                        }}
+                      />
                     </div>
                   </TableCell>
                 </TableRow>

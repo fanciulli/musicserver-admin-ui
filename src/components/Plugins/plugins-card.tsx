@@ -121,6 +121,10 @@ function formatCategoryLabel(category: string): string {
     return "Music Source";
   }
 
+  if (category === "device_connectors") {
+    return "Device Connectors";
+  }
+
   return category;
 }
 

@@ -31,7 +31,7 @@ type ActionState = {
   action: PluginAction;
 };
 
-type PluginVariableType = "string" | "number" | "boolean";
+type PluginVariableType = "string" | "number" | "boolean" | "password";
 
 type PluginVariableEntry = {
   name: string;
@@ -87,6 +87,10 @@ function normalizeVariableType(value: string): PluginVariableType {
 
   if (lower === "boolean" || lower === "bool") {
     return "boolean";
+  }
+
+  if (lower === "password") {
+    return "password";
   }
 
   return "string";
@@ -680,7 +684,13 @@ export function PluginsCard() {
                         {variable.label}
                       </span>
                       <input
-                        type={variable.type === "number" ? "number" : "text"}
+                        type={
+                          variable.type === "number"
+                            ? "number"
+                            : variable.type === "password"
+                              ? "password"
+                              : "text"
+                        }
                         value={
                           value === undefined || value === null
                             ? ""

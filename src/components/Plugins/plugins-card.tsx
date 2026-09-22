@@ -121,16 +121,14 @@ function formatVariableLabel(variableName: string): string {
     .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2");
 }
 
+const CATEGORY_LABELS: Record<string, string> = {
+  music_sources: "Music Source",
+  device_connectors: "Device Connectors",
+  system: "System",
+};
+
 function formatCategoryLabel(category: string): string {
-  if (category === "music_sources") {
-    return "Music Source";
-  }
-
-  if (category === "device_connectors") {
-    return "Device Connectors";
-  }
-
-  return category;
+  return CATEGORY_LABELS[category] ?? category;
 }
 
 function MoreIcon(props: React.SVGProps<SVGSVGElement>) {

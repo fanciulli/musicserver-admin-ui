@@ -163,7 +163,7 @@ export function ApiKeysCard() {
         <TableHeader>
           <TableRow className="border-none bg-[#F7F9FC] dark:bg-dark-2 [&>th]:py-4 [&>th]:text-base [&>th]:text-dark [&>th]:dark:text-white">
             <TableHead className="min-w-[160px]">Name</TableHead>
-            <TableHead>Prefix</TableHead>
+            <TableHead className="min-w-[120px]">Prefix</TableHead>
             <TableHead>Created</TableHead>
             <TableHead>Expires</TableHead>
             <TableHead className="text-right">Actions</TableHead>
@@ -189,7 +189,7 @@ export function ApiKeysCard() {
                   <span className="text-dark dark:text-white">{key.name}</span>
                 </TableCell>
                 <TableCell>
-                  <code className="rounded bg-gray-100 px-2 py-0.5 text-xs text-dark dark:bg-dark-2 dark:text-white">
+                  <code className="whitespace-nowrap rounded bg-gray-100 px-2 py-0.5 text-xs text-dark dark:bg-dark-2 dark:text-white">
                     {key.keyPrefix}…
                   </code>
                 </TableCell>
